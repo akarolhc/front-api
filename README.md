@@ -1,2 +1,1 @@
-# front-api
-Repositório destinado ao trabalho de Frontend em dupla para o consumo de uma API com HTML, CSS, JS e React.
+Projeto Frontend para consumo da API: https://api.adviceslip.com/
