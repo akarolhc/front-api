@@ -4,7 +4,7 @@ import "./styles.css";
 export default function Header() {
   return (
     <header id="exemplo">
-      <h1>Minha Página HTML Básica</h1>
+      <h1>API CONSELHOS</h1>
       <nav className="menu">
         <ul>
           <Link to="/login">
@@ -20,7 +20,7 @@ export default function Header() {
             <li>Conselho do Dia</li>
           </Link>
           <Link to="/about">
-            <li>Sobre</li>
+            <li>Sobre</li> 
           </Link>
         </ul>
       </nav>
