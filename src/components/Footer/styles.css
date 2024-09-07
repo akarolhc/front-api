@@ -1,0 +1,13 @@
+/* exemplo básico de estilo para o Footer */
+footer {
+    background-color: #ea81ad;
+    color: black;
+    padding: 20px;
+    text-align: center;
+    position: fixed; /* fixa o footer no fundo da tela */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
