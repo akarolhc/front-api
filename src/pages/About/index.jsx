@@ -1,9 +1,13 @@
-import './styles.css'
+import './styles.css';
 import { Link } from 'react-router-dom';
 
+
 export default function About() {
+  
     return (
+
         <div className="about">
+
             <h1>API</h1>
             <p>Advice Slip JSON API</p>
             <p>API de conselhos aleatórios</p>

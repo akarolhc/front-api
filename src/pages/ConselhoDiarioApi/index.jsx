@@ -1,5 +1,4 @@
 import './styles.css'
-// consumir API aqui para mostrar conselho do dia
 
 
 function ConselhosDiarioApi () {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./styles.css";
+import "./styles.css"; // Certifique-se de que o caminho está correto
 
 export default function Header() {
   return (
@@ -7,9 +7,6 @@ export default function Header() {
       <h1>API CONSELHOS</h1>
       <nav className="menu">
         <ul>
-          <Link to="/login">
-            <li>Login</li>
-          </Link>
           <Link to="/">
             <li>Home</li>
           </Link>
@@ -20,7 +17,7 @@ export default function Header() {
             <li>Conselho do Dia</li>
           </Link>
           <Link to="/about">
-            <li>Sobre</li> 
+            <li>Sobre</li>
           </Link>
         </ul>
       </nav>
