@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
+import Api from "./pages/Api";
+
 
 function App() {
   const location = useLocation();  
@@ -18,6 +20,7 @@ function App() {
           <Route path='/' element={<Home />} /> 
           <Route path='/about' element={<About />} /> 
           <Route path='/api-conselho' element={<ConselhosDiarioApi />} /> 
+          <Route path='/apis' element={< Api />} />
         </Routes>
       </div>
       {location.pathname === "/login" && <Footer />} 
