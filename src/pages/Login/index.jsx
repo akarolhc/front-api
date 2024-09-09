@@ -1,14 +1,18 @@
 // Login.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Importando o hook de navegação
 import './styles.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Hook para redirecionar
 
   const handleLogin = (e) => {
     e.preventDefault();
-    alert(`Login com email: ${email} e senha: ${password}`);
+    
+    // Redireciona para a página Home após o formulário ser submetido
+    navigate('/');
   };
 
   return (
@@ -35,7 +39,6 @@ function Login() {
         </div>
         <button type="submit" className="login-button">Entrar</button>
       </form>
-      
     </div>
   );
 }
