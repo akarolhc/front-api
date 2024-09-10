@@ -13,8 +13,8 @@ export default function Header() {
           <Link to="/apis">
             <li>Conselho Aleatório</li>
           </Link>
-          <Link to="/conselhos">
-            <li>Conselho do Dia</li>
+          <Link to="/conselho-diario">
+            <li>Conselho Diário</li>
           </Link>
           <Link to="/about">
             <li>Sobre</li>

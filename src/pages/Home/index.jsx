@@ -11,6 +11,9 @@ export default function Home() {
         <Link to="/apis" className="home-button">
           Obter Conselho Aleatório
         </Link>
+        <Link to='/conselho-diario' className="home-button">
+          Obter Conselho do Dia
+        </Link>
         <Link to="/about" className="home-button">
           Saiba Mais Sobre Nós
         </Link>

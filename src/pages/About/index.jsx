@@ -19,7 +19,7 @@ export default function About() {
                 <li>Sistema de resposta leve e otimizado para aplicações web.</li>
             </ul>
 
-            <Link to="/home">Voltar para Home</Link> 
+            <Link to="/">Voltar para Home</Link> 
         </div>
     )
 }

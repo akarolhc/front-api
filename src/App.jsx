@@ -7,24 +7,25 @@ import About from "./pages/About";
 import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
 import Api from "./pages/Api";
 
-
 function App() {
   const location = useLocation();  
 
   return (
     <>
-      <Header /> 
+      {location.pathname !== '/login' && <Header />}
+      
       <div className='content'>
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Home />} /> 
           <Route path='/about' element={<About />} /> 
-          <Route path='/api-conselho' element={<ConselhosDiarioApi />} /> 
-          <Route path='/apis' element={< Api />} />
+          <Route path='/apis' element={<Api />} />
+          <Route path='/conselho-diario' element={<ConselhosDiarioApi />} />
         </Routes>
       </div>
-      {location.pathname === "/login" && <Footer />} 
-      {location.pathname !== '/login' && <Footer />} 
+      
+      {/* MOSTRA O FOOTER EM TUDO */}
+      <Footer />
     </>
   );
 }
