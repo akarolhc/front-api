@@ -6,17 +6,18 @@ const SECRET_KEY = "exemplo";
 const SALT_VALUE = 10;
 
 class UserController {
-  async createUser(nome, email, senha) {
-    if (!nome || !email || !senha) {
+  async createUser(name, email, password, role ) {
+    if (!name || !email || !password || !role) {
       throw new Error("Nome, email e senha são obrigatórios.");
     }
 
-    const cypherSenha = await bcrypt.hash(String(senha), SALT_VALUE);
+    const cypherSenha = await bcrypt.hash(String(password), SALT_VALUE);
 
     const userValue = await user.create({
-      nome,
+      name,
       email,
-      senha: cypherSenha,
+      role,
+      password: cypherSenha,
     });
 
     return userValue;
@@ -36,7 +37,7 @@ class UserController {
     return userValue;
   }
 
-  async update(id, nome, email, senha) {
+  async update(id, name, email, password) {
     const oldUser = await user.findByPk(id);
     if(email){
       const sameEmail = await user.findOne({ where: { email } });
@@ -44,11 +45,11 @@ class UserController {
         throw new Error("Email já cadastrado.");
       }
     }
-    oldUser.nome = nome || oldUser.nome;
+    oldUser.name = name || oldUser.name;
     oldUser.email = email || oldUser.email;
-    oldUser.senha = senha
-      ? await bcrypt.hash(String(senha), SALT_VALUE)
-      : oldUser.senha;
+    oldUser.password = password
+      ? await bcrypt.hash(String(password), SALT_VALUE)
+      : oldUser.password;
     oldUser.save();
 
     return oldUser;
@@ -68,8 +69,8 @@ class UserController {
     return user.findAll();
   }
 
-  async login(email, senha) {
-    if (email === undefined || senha === undefined) {
+  async login(email, password) {
+    if (email === undefined || password === undefined) {
       throw new Error("Email e senha são obrigatórios.");
     }
 
@@ -79,7 +80,7 @@ class UserController {
       throw new Error("[1] Usuário e senha inválidos.");
     }
 
-    const senhaValida = bcrypt.compare(String(senha), userValue.senha);
+    const senhaValida = bcrypt.compare(String(password), userValue.password);
     if (!senhaValida) {
       throw new Error("[2] Usuário e senha inválidos.");
     }

@@ -1,4 +1,5 @@
 const database = require("../config/database");
+const advice = require("../controller/advice");
 
 class AdviceModel {
     constructor() {
@@ -8,14 +9,11 @@ class AdviceModel {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            name: {
-                type: database.db.Sequelize.STRING,
-                allowNull: false,
-            },
-            description: {
+            advice: {
                 type: database.db.Sequelize.STRING,
                 allowNull: false,
             },
         });
     }
 }
+module.exports = new AdviceModel().model;

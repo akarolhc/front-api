@@ -2,10 +2,20 @@ const UserController = require('../controller/user')
 
 class UserApi {
     async createUser(req, res) {
-        const { nome, email, senha } = req.body
+        const { name, email, password } = req.body
 
         try {
-            const user = await UserController.createUser(nome, email, senha)
+            const user = await UserController.createUser(name, email, password, 'viewer')
+            return res.status(201).send(user)
+        } catch (e) {
+            return res.status(400).send({ error: `Erro ao criar usuário ${e.message}`})
+        }
+    }
+    async createUserAdmin(req, res) {
+        const { name, email, password } = req.body
+
+        try {
+            const user = await UserController.createUser(name, email, password, 'admin')
             return res.status(201).send(user)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao criar usuário ${e.message}`})
@@ -13,11 +23,11 @@ class UserApi {
     }
 
     async updateUser(req, res) {
-        const { id } = req.params
-        const { nome, email, senha } = req.body
+        const { id } = req.params || req.session.id
+        const { name, email, password } = req.body
 
         try {
-            const user = await UserController.update(Number(id), nome, email, senha)
+            const user = await UserController.update(Number(id), name, email, password)
             return res.status(200).send(user)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao alterar usuário ${e.message}`})
@@ -54,10 +64,10 @@ class UserApi {
     }
 
     async login(req, res) {
-        const { email, senha } = req.body
+        const { email, password } = req.body
         console.log(req.body)
         try {
-            const token = await UserController.login(email, senha)
+            const token = await UserController.login(email, password)
 
             res.status(200).send({ token })
         } catch (e) {

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
+const user = require("../controller/user");
 
-function authMiddleware(rules = []) {
+function authMiddleware(role = []) {
   return(req, res, next) =>{
   const token = req.headers["authorization"];
 
@@ -8,7 +9,7 @@ function authMiddleware(rules = []) {
     return res.status(400).json({ mensagem: "Token não fornecido" });
   }
 
-  jwt.verify(token, "MeuSegredo123", async (err, decoded) => {
+  jwt.verify(token, "exemplo", async (err, decoded) => {
     if (err) {
       return res.status(401).json({ mensagem: "Token inválido" });
     }
@@ -17,7 +18,8 @@ function authMiddleware(rules = []) {
     if(!userLogger){
       return res.status(500).json("usuário não encontrado!")
     }
-    if(rules.length && !rules.includes(userLogger.rule)){
+    console.log(userLogger)
+    if(role.length && !role.includes(userLogger.role)){
       return res.status(401).json({ mensagem: "Usuário sem permissão!" });
     }
 

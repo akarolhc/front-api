@@ -4,6 +4,7 @@ const database = require("../backend/src/config/database");
 
 const UserApi = require("./src/api/user");
 const UserRouter = require("./src/routes/user");
+const AdviceRouter = require("./src/routes/advice");
 const authMiddleware = require("./src/middleware/auth");
 
 const app = express();
@@ -18,8 +19,10 @@ app.get("/", (req, res) => {
 // // Rotas sem token
 app.post("/api/v1/login", UserApi.login);
 app.post("/api/v1/user", UserApi.createUser);
+app.post("/api/v1/user/admin", authMiddleware(['admin']), UserApi.createUserAdmin)
 
-app.use("/api/v1/user", authMiddleware, UserRouter);
+app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/advice", AdviceRouter);
 
 database.db
   .sync({ force: false })

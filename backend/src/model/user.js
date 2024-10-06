@@ -19,7 +19,7 @@ class UserModel {
         type: database.db.Sequelize.STRING,
         allowNull: false
       },
-      rule: {
+      role: {
         type: database.db.Sequelize.ENUM('admin', 'viewer'),
         allowNull: false
       }

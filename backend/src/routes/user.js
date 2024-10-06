@@ -1,11 +1,13 @@
 const express = require("express");
-
-const UserApi = require("../api/user");
+const authMiddleware = require("../middleware/auth");
 const router = express.Router();
+const UserApi = require("../api/user");
 
-router.put("/:id", UserApi.updateUser);
-router.get("/", UserApi.findUsers); // DELETE ME
-router.get("/context", UserApi.findContext);
-router.delete("/:id", UserApi.deleteUser);
+router.post("/", UserApi.createUser);
+router.put("/", authMiddleware(), UserApi.updateUser); //user/api/
+
+router.post("/admin", authMiddleware(["admin"]), UserApi.createUserAdmin);//user/api/v1/admin 
+router.put("/admin/:id", authMiddleware(["admin"]), UserApi.updateUser);
+router.delete("/admin/:id", authMiddleware(["admin"]), UserApi.deleteUser);
 
 module.exports = router;

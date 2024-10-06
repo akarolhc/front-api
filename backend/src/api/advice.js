@@ -37,7 +37,7 @@ class AdviceApi {
 
     async findAdvices(req, res) {
         try {
-            const Advices = await AdviceController.findAdvices();
+            const Advices = await AdviceController.findAll();
             return res.status(200).send(Advices);
         } catch (e) {
             return res.status(400).send({ error: `Erro ao listar conselho: ${e.message}` });
@@ -57,4 +57,4 @@ class AdviceApi {
     }
 }
 
-module.exports = AdviceApi;
+module.exports = new AdviceApi();
