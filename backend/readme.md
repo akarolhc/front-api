@@ -1,0 +1,1 @@
+npm run --watch index.js pra iniciar
