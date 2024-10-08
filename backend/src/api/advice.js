@@ -14,10 +14,10 @@ class AdviceApi {
 
     async updateAdvice(req, res) {
         const { id } = req.params;
-        const { Advice } = req.body;
+        const { advice } = req.body;
 
         try {
-            const updatedAdvice = await AdviceController.updateAdvice(Number(id), Advice);
+            const updatedAdvice = await AdviceController.updateAdvice(Number(id), advice);
             return res.status(200).send(updatedAdvice);
         } catch (e) {
             return res.status(400).send({ error: `Erro ao alterar conselho: ${e.message}` });
@@ -39,6 +39,17 @@ class AdviceApi {
         try {
             const Advices = await AdviceController.findAll();
             return res.status(200).send(Advices);
+        } catch (e) {
+            return res.status(400).send({ error: `Erro ao listar conselho: ${e.message}` });
+        }
+    }
+
+    async findOneAdvice(req, res) {
+        const { id } = req.params;
+
+        try {
+            const advice = await AdviceController.findOne(Number(id));
+            return res.status(200).send(advice);
         } catch (e) {
             return res.status(400).send({ error: `Erro ao listar conselho: ${e.message}` });
         }

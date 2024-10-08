@@ -37,6 +37,20 @@ class UserController {
     return userValue;
   }
 
+  async findOne(id) {
+    if (id === undefined) {
+      throw new Error("");
+    }
+
+    const userValue = await user.findOne({ where: { id } });
+
+    if (!userValue) {
+      throw new Error("Usuário não encontrado.");
+    }
+
+    return userValue;
+  }
+
   async update(id, name, email, password) {
     const oldUser = await user.findByPk(id);
     if(email){
@@ -63,10 +77,6 @@ class UserController {
     userValue.destroy();
 
     return;
-  }
-
-  async find() {
-    return user.findAll();
   }
 
   async login(email, password) {

@@ -47,16 +47,18 @@ class UserApi {
 
     async findUsers(req, res) {
         try {
-            const users = await UserController.find()
+            const users = await UserController.findUser()
             return res.status(200).send(users)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao listar usuário ${e.message}`})
         }
     }
 
-    async findContext(req, res) {
+    async findOneUser(req, res) {
+        const id = req.params.id || req.session.id
+
         try {
-            const user = await UserController.findUser(req?.session?.id || 0)
+            const user = await UserController.findOne(Number(id))
             return res.status(200).send(user)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao listar usuário ${e.message}`})
