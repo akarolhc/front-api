@@ -8,17 +8,19 @@ import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
 import { AuthProvider } from "./auth/Context";
 import PrivateRoute from "./routes/PrivateRoute";
 import Api from "./pages/Api";
+import Register from "./pages/Register"; // Importando a página de registro
 
 function App() {
   const location = useLocation();  
 
   return (
     <AuthProvider>
-      {location.pathname !== '/login' && <Header />}
+      {location.pathname !== '/login' && location.pathname !== '/register' && <Header />}
       
       <div className='content'>
         <Routes>
           <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} /> {/* Rota para a página de registro */}
           <Route path='/' element={<Home />} /> 
           
           <Route element={<PrivateRoute />}>
