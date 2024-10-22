@@ -21,9 +21,9 @@ function App() {
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} /> {/* Rota para a página de registro */}
-          <Route path='/' element={<Home />} /> 
           
           <Route element={<PrivateRoute />}>
+          <Route path='/' element={<Home />} /> 
             <Route path='/apis' element={<Api />} />
             <Route path='/conselho-diario' element={<ConselhosDiarioApi />} />
           </Route>

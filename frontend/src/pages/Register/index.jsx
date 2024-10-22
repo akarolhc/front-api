@@ -1,15 +1,34 @@
 import { useState } from 'react';
 import './styles.css';
+import {toast} from 'react-toastify'
+import { createUser } from '../../api/user';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    // Aqui você pode adicionar a lógica para registrar o usuário
-    console.log('Registrando usuário:', { name, email, password });
+  const handleRegister = async (e) => {
+    try {
+      e.preventDefault();
+
+      const responseApi = await createUser({name, email, password})
+      console.log(responseApi)
+      if(responseApi.id){
+        window.location = '/login'
+      } else {
+        console.log(responseApi)
+      }
+    } catch (error) {
+      console.log(error)
+      if (error.status === 403) {
+        return toast("Sem permissão.");
+      }
+      if (error.status === 401 || error.status === 404) {
+        return toast('Email ou senha inválido, tente novamente!');
+      }
+      toast('Erro inesperado, tente novamente mais tarde!');
+    }
   };
 
   return (
@@ -47,6 +66,6 @@ const Register = () => {
       </form>
     </div>
   );
-};
+}
 
 export default Register;

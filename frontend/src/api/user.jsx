@@ -1,7 +1,7 @@
 import api from './api'
 
 export const createUser = async (user) => {
-    const response = await api.post("/user", user)
+    const response = await api.post('api/v1/user', user)
     return response.data
 }
 
