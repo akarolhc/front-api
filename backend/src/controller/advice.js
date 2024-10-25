@@ -1,14 +1,14 @@
 const adviceModel = require("../model/advice");
 
 class AdviceController {
-    async createAdvice(advice, titule) {
-        if (!advice || !titule) {
+    async createAdvice(titule, userId) {
+        if (!titule || !userId) {
             throw new Error("Conselho não fornecido");
         }
 
         const AdviceValue = await adviceModel.create({
-            advice,
-            titule
+            titule,
+            userId
         });
 
         return AdviceValue;
@@ -92,15 +92,15 @@ class AdviceController {
         return result;
     }
 
-    async updateAdvice(id, advice, titule) {
+    async updateAdvice(id, titule, userId) {
         const oldAdvice = await adviceModel.findByPk(id);
 
         if (!oldAdvice) {
             throw new Error("Conselho não encontrado");
         }
 
-        oldAdvice.advice = advice || oldAdvice.advice;
         oldAdvice.titule = titule || oldAdvice.titule;
+        oldAdvice.userId = userId || oldAdvice.userId;
         await oldAdvice.save();
 
         return oldAdvice;

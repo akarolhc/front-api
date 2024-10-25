@@ -16,8 +16,8 @@ class UserController {
     const userValue = await user.create({
       name,
       email,
-      role,
       password: cypherSenha,
+      role,
     });
 
     return userValue;

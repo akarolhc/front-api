@@ -54,9 +54,19 @@ const Api = () => {
         <div className="api-container">
             <h1>Conselho para você:</h1>
             <p className="advice-text">{translatedAdvice ? translatedAdvice : 'Carregando conselho...'}</p>
-            <button onClick={getNewAdvice} className="new-advice-button">
-                Gerar Novo Conselho
-            </button>
+            
+            {/* Contêiner para os botões */}
+            <div className="button-container">
+                <button onClick={getNewAdvice} className="new-advice-button">
+                    Gerar Um Novo Conselho
+                </button>
+                <button onClick={getNewAdvice} className="new-advice-button">
+                    Modificar Conselho
+                </button>
+                <button onClick={getNewAdvice} className="new-advice-button">
+                    Deletar Conselho
+                </button>
+            </div>
         </div>
     );
 };

@@ -13,6 +13,13 @@ class AdviceModel {
                 type: database.db.Sequelize.STRING,
                 allowNull: false,
             },
+            userId: {
+                type: database.db.Sequelize.INTEGER,
+                references: {
+                    model: 'users',
+                    key: 'id'
+                }
+            }
         });
     }
 }

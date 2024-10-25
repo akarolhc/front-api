@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 import { createContext } from "react"
 import { jwtDecode } from "jwt-decode"
@@ -23,22 +21,34 @@ const getRole =  (token) => {
     }
 }
 
+const getId = (token) => {
+    try{
+        const decode = jwtDecode(token)
+        return decode.id
+    } catch(error){
+        return false
+    }
+}
+
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
 
     const [token, setToken] = useState(null)
     const [role, setRole] = useState(null)
+    const [userId, setUserId] = useState(null)
 
     const login = (newToken) => {
         setToken(newToken)
         setRole(getRole(newToken)) // função pra pegar a role do token
+        setUserId(getId(newToken))
         localStorage.setItem('token', newToken)
     }
 
     const logout = () => {
         setToken(null)
         setRole(null) // função pra pegar a role do token
+        setUserId(null)
         localStorage.removeItem('token')
     }
 
@@ -47,11 +57,12 @@ export const AuthProvider = ({ children }) => {
         if (storage && isValidToken(storage)) {
             setToken(storage)
             setRole(getRole(storage))
+            setUserId(getId(storage))
         }
     }, [])
 
     return (
-      <AuthContext.Provider value={{ token, role, login, logout }}>
+      <AuthContext.Provider value={{ token, role, login, logout, userId }}>
         { children }
       </AuthContext.Provider>
     )

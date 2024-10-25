@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import "./styles.css"; // Certifique-se de que o caminho está correto
+import "./styles.css"; 
+import { useContext } from "react";
+import { AuthContext } from "../../auth/Context";
 
 export default function Header() {
+    const {token} = useContext(AuthContext)
   return (
     <header id="exemplo">
       <h1>API CONSELHOS</h1>
@@ -19,6 +22,7 @@ export default function Header() {
           <Link to="/about">
             <li>Sobre</li>
           </Link>
+          {token && <Link to="/favorites"><li>Favoritos</li></Link>  }
           
         </ul>
       </nav>
