@@ -1,12 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import './styles.css';
-import { AuthContext } from '../../auth/Context';
 
 export default function User() {
-  const { logout } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-
 
   const handleUpdate = () => {
     // lógica para atualizar o usuário
@@ -16,7 +13,6 @@ export default function User() {
   const handleDelete = () => {
     // lógica para deletar o usuário
     console.log('Usuário deletado');
-    
   };
 
   return (
@@ -24,7 +20,7 @@ export default function User() {
       <div className="user-container">
         <h2>Gerenciar Usuário</h2>
         <div className="input-group">
-          <label>Email:</label>
+          <label>Nome de Usuário:</label>
           <input 
             type="text" 
             value={username} 
@@ -32,7 +28,7 @@ export default function User() {
           />
         </div>
         <div className="input-group">
-          <label>Senha:</label>
+          <label>Email:</label>
           <input 
             type="email" 
             value={email} 

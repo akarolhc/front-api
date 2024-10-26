@@ -18,13 +18,13 @@ function App() {
     <AuthProvider>
       {location.pathname !== '/login' && location.pathname !== '/register' && <Header />}
 
-      
       <div className='content'>
         <Routes>
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Home />} /> 
           <Route path='/register' element={<Register />} />
-          
+          <Route path='/user' element={<User />} /> {/* Rota para o User */}
+
           <Route element={<PrivateRoute />}>
             <Route path='/apis' element={<Api />} />
             <Route path='/conselho-diario' element={<ConselhosDiarioApi />} />
