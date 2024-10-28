@@ -6,10 +6,11 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
 import User from "./pages/User"; 
-import { AuthProvider } from "./auth/Context";
 import PrivateRoute from "./routes/PrivateRoute";
 import Api from "./pages/Api";
 import Register from "./pages/Register";
+import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "./auth/Context";
 
 function App() {
   const location = useLocation();  
@@ -35,6 +36,7 @@ function App() {
       </div>
       
       <Footer />
+      {/* <ToastContainer />  */}
     </AuthProvider>
   );
 }
