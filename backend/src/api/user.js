@@ -23,9 +23,9 @@ class UserApi {
     }
 
     async updateUser(req, res) {
-        const { id } = req.params || req.session.id
+        const id = req.params.id || req.session.id
         const { name, email, password } = req.body
-
+        console.log('oieee', req.params.id, req.session.id)
         try {
             const user = await UserController.update(Number(id), name, email, password)
             return res.status(200).send(user)

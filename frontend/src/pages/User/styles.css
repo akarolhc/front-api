@@ -1,0 +1,55 @@
+/* Garante que toda a página de usuário tenha um fundo branco */
+.user-page {
+  min-height: 100vh; /* Faz com que a página ocupe toda a altura da tela */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.user-container {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #edbada;
+  border-radius: 4px;
+}
+
+.update-button {
+  background-color: #ea81ad;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: #ff6666;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+body {
+  background-color: #fef9f9; /* Cor de fundo do site */
+}
