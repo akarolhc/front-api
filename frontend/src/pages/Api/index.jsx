@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './styles.css';
+import { deleteAdvice, getAdvices } from '../../api/advice';
 
 async function translateText(text, targetLang = 'pt') {
     try {
@@ -34,7 +35,7 @@ const Api = () => {
 
     // Função que busca um novo conselho
     const getNewAdvice = async () => {
-        const newAdvice = await fetchAdvice();
+        const newAdvice = await getAdvices();
         setAdvice(newAdvice);
 
         // Traduz o conselho
@@ -46,6 +47,23 @@ const Api = () => {
         }
     };
 
+    const alterarConselho = async () => {
+        const newAdvice = await getAdvices();
+        setAdvice(newAdvice);
+
+        // Traduz o conselho
+        if (newAdvice) {
+            const translated = await translateText(newAdvice, 'pt');
+            setTranslatedAdvice(translated);
+        } else {
+            setTranslatedAdvice('Não foi possível carregar o conselho.');
+        }
+    };
+
+    const deletarConselho = async () => {
+        deleteAdvice(advice.id)
+    };
+
     useEffect(() => {
         getNewAdvice(); 
     }, []);
@@ -55,17 +73,25 @@ const Api = () => {
             <h1>Conselho para você:</h1>
             <p className="advice-text">{translatedAdvice ? translatedAdvice : 'Carregando conselho...'}</p>
             
-            {/* Contêiner para os botões */}
             <div className="button-container">
-                <button onClick={getNewAdvice} className="new-advice-button">
-                    Gerar Um Novo Conselho
-                </button>
-                <button onClick={getNewAdvice} className="new-advice-button">
-                    Modificar Conselho
-                </button>
-                <button onClick={getNewAdvice} className="new-advice-button">
-                    Deletar Conselho
-                </button>
+                <input 
+                    type="button" 
+                    onClick={getNewAdvice} 
+                    value="Gerar Um Novo Conselho" 
+                    className="new-advice-button" 
+                />
+                <input 
+                    type="button" 
+                    onClick={alterarConselho} 
+                    value="Modificar Conselho" 
+                    className="new-advice-button" 
+                />
+                <input 
+                    type="button" 
+                    onClick={deletarConselho} 
+                    value="Deletar Conselho" 
+                    className="new-advice-button" 
+                />
             </div>
         </div>
     );

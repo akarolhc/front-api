@@ -5,24 +5,22 @@ export const createAdvice = async (advice) => {
     return response.data
 }
 
-//adminnnnn
-export const updateUser = async(id, user) => {
-    const response = await api.put(`/api/v1/user/${id}`, user)
+export const getAdvices = async () => {
+    const response = await api.get('api/v1/advice')
     return response.data
 }
-export const deleteUser = async(id) => {
-    const response = await api.delete(`/api/v1/user/${id}`)
+
+export const getAdviceById = async (id) => {
+    const response = await api.get(`api/v1/advice/${id}`)
     return response.data
 }
-export const getUserByIdUser = async(id) => {
-    const response = await api.get(`/api/v1/user/${id}`)
+
+export const updateAdvice = async (id, advice) => {
+    const response = await api.put(`api/v1/advice/${id}`, advice)
     return response.data
 }
-export const getUsers = async() => {
-    const response = await api.get(`/api/v1/user`)
-    return response.data
-}
-export const loginUser = async(email, password) => {
-    const response = await api.post(`/api/v1/login`, {email, password})
+
+export const deleteAdvice = async (id) => {
+    const response = await api.delete(`api/v1/advice/${id}`)
     return response.data
 }
