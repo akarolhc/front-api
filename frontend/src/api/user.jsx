@@ -12,6 +12,11 @@ export const userInfo = async () => {
     return response.data
 }
 
+export const updateUserViewer = async(user) => {
+    const response = await api.put(`/api/v1/user/`, user)
+    return response.data
+}
+
 
 //adminnnnn
 export const updateUser = async(id, user) => {

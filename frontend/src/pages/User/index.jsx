@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { deleteUser, updateUser, userInfo } from '../../api/user'
+import { deleteUser, updateUser, updateUserViewer, userInfo} from '../../api/user'
 import './styles.css';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -14,9 +14,11 @@ export default function User() {
   const [id, setId] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isUpdate, setIsUpdate] = useState(false);
   const [updNome, setUpdNome] = useState('');
   const [updEmail, setUpdEmail] = useState('');
+  const [updPassword, setUpdPassword] = useState('');
 
   async function carregarPerfil() {
     try {
@@ -27,6 +29,7 @@ export default function User() {
         setUsername(response.name);
         setEmail(response.email);
       }
+      
     } catch {
       toast.error('Erro ao carregar o perfil.');
     }    
@@ -34,22 +37,17 @@ export default function User() {
 
   const handleSaveUpdate = async () => {
     try {
-      const response = await updateUser(id, { name: updNome, email: updEmail });
+      const response = await updateUserViewer({ name: updNome, email: updEmail, password: updPassword });
       if (response.id) {
         setUsername(updNome);
         setEmail(updEmail);
+        setPassword(updPassword);
         setIsUpdate(false);
         toast.success('Perfil atualizado!');
       }    
     } catch {
       toast.error('Erro ao salvar atualização.');
     }
-  };
-
-  const handleClickUpdate = () => {
-    setIsUpdate(true);
-    setUpdNome(username);
-    setUpdEmail(email);
   };
 
   const handleClickDelete = async () => {
@@ -79,19 +77,27 @@ export default function User() {
           <label>Nome de Usuário: {!isUpdate ? username: <input type='text' id="nome" value={updNome} onChange={(e) => setUpdNome(e.target.value)}/>} </label>
           <input 
             type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
+            value={updNome} 
+            onChange={(e) => setUpdNome(e.target.value)} 
           />
         </div>
         <div className="input-group">
           <label>Email:{!isUpdate ? email : <input type='email' id="email" value={updEmail} onChange={(e) => setUpdEmail(e.target.value)}/>}</label>
           <input 
             type="email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
+            value={updEmail} 
+            onChange={(e) => setUpdEmail(e.target.value)} 
           />
         </div>
-      <button className="update-button" onClick={handleClickUpdate}>Atualizar</button>
+        <div className="input-group">
+          <label>Senha:{!isUpdate ? password : <input type='password' id="password" value={updPassword} onChange={(e) => setUpdPassword(e.target.value)}/>}</label>
+          <input 
+            type="password" 
+            value={updPassword} 
+            onChange={(e) => setUpdPassword(e.target.value)} 
+          />
+        </div>
+        <button className="update-button" onClick={handleSaveUpdate}>Atualizar</button>
         <button className="delete-button" onClick={handleClickDelete}>Deletar Conta</button>
       </div>
     </div>
