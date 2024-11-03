@@ -1,54 +1,70 @@
 import { useEffect, useState } from 'react';
-import './styles.css';
-import { deleteAdvice, getAdvices } from '../../api/advice';
+import './styles.css';    
+import { createAdvice, findAdvices } from '../../api/advice';
+import { translateText } from '../../api/translate';
 
-async function translateText(text, targetLang = 'pt') {
-    try {
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
-        const data = await response.json();
+export default function Api (){
+    const [showAdvice, setShowAdvice] = useState(false);
+    const [conselhosSalvos, setConselhosSalvos] = useState([]);
+    const [advice, setAdvice] = useState('');
+    const [translatedAdvice, setTranslatedAdvice] = useState('');
 
-        if (data.responseStatus === 429) {
-            throw new Error("429 too many requests");
+    // esse useeffect é para salvar os conselhos salvos no localstorage
+    useEffect(() => {
+        const conselhosSallvos = JSON.parse(localStorage.getItem('conselhos')) || [];
+        setConselhosSalvos(conselhosSallvos);
+    }, []);
+
+    //useeffect usado sempre que o conselhosSalvos muda
+    useEffect(() => {
+        localStorage.setItem('conselhos', JSON.stringify(conselhosSalvos));
+    }, [conselhosSalvos]);
+
+
+    const toogleAdvice = () => {
+        setShowAdvice(!showAdvice);
+    };
+
+    const hadleButtonClick = async () => {
+        const newAdvice = document.getElementById('new-advice').value.trim();
+
+        if (newAdvice !== '') {
+            setConselhosSalvos([...conselhosSalvos, newAdvice]);
+            document.getElementById('new-advice').value = '';
+         
+            try{
+            const newAdvice = await createAdvice(token, {
+                advice: newAdvice
+            });
+
+            setAdvice((newAdvice) =>[...prevAdvice, newAdvice]);
+            document.getElementById('new-advice').value = '';
+            alert('Conselho salvo com sucesso!');
+        } catch (error) {
+            console.error('Erro ao salvar conselho', error);
+            alert('Erro ao salvar conselho. Tente novamente.');
         }
-        return data.responseData.translatedText;
-    } catch (error) {
-        console.error('Erro ao traduzir:', error);
-        return text;
+    } else {
+        alert('Por favor, insira um conselho antes de salvar.');
     }
-}
-
-// Busca o conselho
-const fetchAdvice = async () => {
-    try {
-        const response = await fetch('https://api.adviceslip.com/advice');
-        const data = await response.json();
-        return data.slip.advice;
-    } catch (error) {
-        console.error('Erro ao buscar conselho', error);
-        return null;
-    }
-};
-
-const Api = () => {
-    const [advice, setAdvice] = useState(''); 
-    const [translatedAdvice, setTranslatedAdvice] = useState(''); 
-
+    };
     // Função que busca um novo conselho
     const getNewAdvice = async () => {
-        const newAdvice = await getAdvices();
-        setAdvice(newAdvice);
+        const{results} = await findAdvices();
+
+        const ramdomNumber = Math.floor(Math.random() * results.length);
+        
+        setAdvice(results[ramdomNumber].advice);
 
         // Traduz o conselho
-        if (newAdvice) {
-            const translated = await translateText(newAdvice, 'pt');
-            setTranslatedAdvice(translated);
-        } else {
-            setTranslatedAdvice('Não foi possível carregar o conselho.');
-        }
+            const translated = await translateText(results[ramdomNumber].advice);
+            setTranslatedAdvice(translated.responseData.translatedText);        
     };
+
+    
 
     const alterarConselho = async () => {
-        const newAdvice = await getAdvices();
+        const newAdvice = await findAdvices();
         setAdvice(newAdvice);
 
         // Traduz o conselho
@@ -58,7 +74,7 @@ const Api = () => {
         } else {
             setTranslatedAdvice('Não foi possível carregar o conselho.');
         }
-    };
+ };
 
     const deletarConselho = async () => {
         deleteAdvice(advice.id)
@@ -71,7 +87,7 @@ const Api = () => {
     return (
         <div className="api-container">
             <h1>Conselho para você:</h1>
-            <p className="advice-text">{translatedAdvice ? translatedAdvice : 'Carregando conselho...'}</p>
+            <p className="advice-text">{translatedAdvice}</p>
             
             <div className="button-container">
                 <input 
@@ -92,9 +108,15 @@ const Api = () => {
                     value="Deletar Conselho" 
                     className="new-advice-button" 
                 />
+                <input 
+                    type="button" 
+                    onClick={hadleButtonClick} 
+                    value="Publicar Conselho" 
+                    className="new-advice-button" 
+                />
             </div>
         </div>
     );
 };
 
-export default Api;
+

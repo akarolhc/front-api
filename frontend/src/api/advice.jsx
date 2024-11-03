@@ -1,16 +1,16 @@
 import api from './api'
 
 export const createAdvice = async (advice) => {
-    const response = await api.post('api/v1/advice', advice)
+    const response = await api.post('api/v1/advice/', advice)
     return response.data
 }
 
-export const getAdvices = async () => {
-    const response = await api.get('api/v1/advice')
+export const findAdvices = async () => {
+    const response = await api.get('api/v1/advice/')
     return response.data
 }
 
-export const getAdviceById = async (id) => {
+export const findOneAdvice = async (id) => {
     const response = await api.get(`api/v1/advice/${id}`)
     return response.data
 }
