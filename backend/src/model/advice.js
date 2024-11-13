@@ -3,7 +3,7 @@ const advice = require("../controller/advice");
 
 class AdviceModel {
     constructor() {
-        this.model = database.db.define("advice", {
+        this.model = database.db.define("advices", {
             id: {
                 type: database.db.Sequelize.INTEGER,
                 autoIncrement: true,
@@ -12,13 +12,6 @@ class AdviceModel {
             advice: {
                 type: database.db.Sequelize.STRING,
                 allowNull: false,
-            },
-            userId: {
-                type: database.db.Sequelize.INTEGER,
-                references: {
-                    model: 'users',
-                    key: 'id'
-                }
             }
         });
     }

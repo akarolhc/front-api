@@ -5,8 +5,11 @@ const database = require("../backend/src/config/database");
 const UserApi = require("./src/api/user");
 const UserRouter = require("./src/routes/user");
 const AdviceRouter = require("./src/routes/advice");
+const UserAdviceRouter = require("./src/routes/user_advice");
 const authMiddleware = require("./src/middleware/auth");
 const UserModel = require("./src/model/user");
+require("./src/model/association");
+
 
 const app = express();
 app.use(express.json());
@@ -24,7 +27,7 @@ app.post("/api/v1/user/admin", authMiddleware(['admin']), UserApi.createUserAdmi
 
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/advice", AdviceRouter);
-
+app.use("/api/v1/userAdvice", UserAdviceRouter);
 // Função assíncrona para criar usuário administrador
 const createAdminUser = async () => {
   try {
@@ -49,7 +52,7 @@ const createAdminUser = async () => {
 };
 
 database.db
-  .sync({ force: false })
+  .sync({ force:  false })
   .then(async (_) => {
     await createAdminUser(); // Chamar a função de criação do admin
 

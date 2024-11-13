@@ -52,7 +52,6 @@ class UserController {
   }
 
   async update(id, name, email, password) {
-    console.log("oieerrr", id, name, email, password)
     const oldUser = await user.findByPk(id);
     if(email){
       const sameEmail = await user.findOne({ where: { email } });
@@ -60,7 +59,6 @@ class UserController {
         throw new Error("Email já cadastrado.");
       }
     }
-    console.log('oieeee',oldUser)
     oldUser.name = name || oldUser.name;
     oldUser.email = email || oldUser.email;
     oldUser.password = password
@@ -97,7 +95,7 @@ class UserController {
       throw new Error("[2] Usuário e senha inválidos.");
     }
 
-    return jwt.sign({ id: userValue.id }, SECRET_KEY, { expiresIn: 60 * 60 });
+    return jwt.sign({ id: userValue.id, role: userValue.role }, SECRET_KEY, { expiresIn: 60 * 60 });
   }
 }
 

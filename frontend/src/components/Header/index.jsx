@@ -4,11 +4,11 @@ import { AuthContext } from "../../auth/Context";
 import "./styles.css"; 
 
 export default function Header() {
-    const { token } = useContext(AuthContext);
+    const { token, role } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleRedirectToUser = () => {
-        navigate("/user"); // Redireciona para a página de usuário
+        navigate("/user"); 
     };
 
     return (
@@ -33,14 +33,19 @@ export default function Header() {
                             <li>Favoritos</li>
                         </Link>
                     )}
+                    {role ==='admin' && token && (
+                            <Link to="/admin">
+                                <li>Admin</li>
+                            </Link>
+                    )}
                 </ul>
             </nav>
             <div className="logout-container">
                 <img
-                    src="/public/imagem-logout.png" // Certifique-se de que o caminho da imagem está correto
+                    src="/public/imagem-logout.png" 
                     alt="User Settings"
                     className="logout-icon"
-                    onClick={handleRedirectToUser} // Chama apenas o redirecionamento
+                    onClick={handleRedirectToUser} 
                 />
             </div>
         </header>

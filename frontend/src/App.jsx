@@ -7,10 +7,12 @@ import About from "./pages/About";
 import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
 import User from "./pages/User"; 
 import PrivateRoute from "./routes/PrivateRoute";
-import Api from "./pages/Api";
+import Api from "./pages/Api/index";
 import Register from "./pages/Register";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./auth/Context";
+import Admin from "./pages/Admin";
+import Favoritos from "./pages/Favoritos";
 
 function App() {
   const location = useLocation();  
@@ -24,11 +26,12 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/' element={<Home />} /> 
           <Route path='/register' element={<Register />} />
-          <Route path='/user' element={<User />} /> {/* Rota para o User */}
-
+          <Route path='/user' element={<User />} /> 
           <Route element={<PrivateRoute />}>
+            <Route path='/admin' element={<Admin />} />
             <Route path='/apis' element={<Api />} />
             <Route path='/conselho-diario' element={<ConselhosDiarioApi />} />
+            <Route path='/favorites' element={<Favoritos />} />
           </Route>
 
           <Route path='/about' element={<About />} /> 
