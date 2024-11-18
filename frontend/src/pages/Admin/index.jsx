@@ -5,7 +5,10 @@ import {
   findOne,
   deleteUserAdvice,
   createUserAdvice,
-  userAdvices
+  userAdvices,
+  updateAdvice,
+  findAllAdvices,
+  deleteAdvice,
 } from "../../api/advice";
 import { translateText } from "../../api/translate";
 import { useNavigate } from "react-router-dom";
@@ -13,24 +16,8 @@ import { useNavigate } from "react-router-dom";
 export default function Api() {
   const [advice, setAdvice] = useState(null);
   const [advices, setAdvices] = useState([]);
+  const [updateAdviceValue, setUpdateAdviceValue] = useState(null);
   const navigate = useNavigate();
-
-  const getNewAdvice = async () => {
-    try {
-      const response = await findOne();
-      console.log("Resposta da API inicial:", response);
-      const conselho = response.data;
-
-      if (conselho) {
-        const translated = await traduzirConselho(conselho);
-        setAdvice({ ...conselho, translatedAdvice: translated });
-      } else {
-        console.log("Conselho não encontrado na resposta:", conselho);
-      }
-    } catch (e) {
-      console.log("Erro ao buscar conselho", e);
-    }
-  };
 
   const traduzirConselho = async (text) => {
     try {
@@ -64,12 +51,12 @@ export default function Api() {
 
   const getFavorites = async () => {
     try {
-      const response = await userAdvices();
+      const response = await findAllAdvices();
 
-      if (response && Array.isArray(response)) {
+      if (response) {
         const favoriteList = response.map((item) => ({
           id: item.id,
-          advice: item.advice.advice,
+          advice: item.advice,
         }));
 
         setAdvices(favoriteList);
@@ -84,15 +71,25 @@ export default function Api() {
 
   const handleDeleteUserAdvice = async (index) => {
     try {
-      await deleteUserAdvice(index);
+      await deleteAdvice(index);
       getFavorites();
     } catch (e) {
       console.log("Erro ao deletar conselho favorito", e);
     }
   };
 
+  const handleUpdateAdvice = async () => {
+    try {
+      const response = await updateAdvice(updateAdviceValue.id, { advice: updateAdviceValue.advice });
+      console.log("Conselho atualizado com sucesso:", response);
+      setUpdateAdviceValue(null);
+      getFavorites();
+    } catch (e) {
+      console.log("Erro ao atualizar conselho favorito", e);
+    }
+  };
+
   useEffect(() => {
-    getNewAdvice();
     getFavorites();
   }, []);
 
@@ -101,7 +98,20 @@ export default function Api() {
       <h1>Conselho para você:</h1>
 
       {advice ? (
-        (
+        updateAdviceValue ? (
+          <div className="a">
+            <input
+              type="text"
+              value={updateAdviceValue.advice}
+              onChange={(e) => setUpdateAdviceValue({...updateAdviceValue, advice: e.target.value})}
+            />
+            <button
+              onClick={() => handleUpdateAdvice()}
+            >
+              Alterar Conselho
+            </button>
+          </div>
+        ) : (
           <div key={advice.id}>
             <h2>{advice.translatedAdvice}</h2>
           </div>
@@ -111,12 +121,12 @@ export default function Api() {
       )}
 
       <div className="button-container">
-        <input
+        {/* <input
           type="button"
           onClick={getNewAdvice}
           value="Gerar Um Novo Conselho"
           className="new-advice-button"
-        />
+        /> */}
         <input
           type="button"
           onClick={handleLikeButtonClick}
@@ -132,6 +142,9 @@ export default function Api() {
             {advices.map((fav) => (
               <li key={fav.id}>
                 {fav.advice}
+                <button onClick={() => setUpdateAdviceValue(fav)}>
+                  Alterar Conselho
+                </button>
                 <button onClick={() => handleDeleteUserAdvice(fav.id)}>
                   Desfavoritar
                 </button>

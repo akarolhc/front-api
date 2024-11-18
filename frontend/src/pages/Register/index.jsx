@@ -2,11 +2,13 @@ import { useState } from 'react';
 import './styles.css';
 import {toast} from 'react-toastify'
 import { createUser } from '../../api/user';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     try {
@@ -15,7 +17,8 @@ const Register = () => {
       const responseApi = await createUser({name, email, password})
       console.log(responseApi)
       if(responseApi.id){
-        window.location = '/login'
+        //window.location = '/login'
+        navigate('/login')
       } else {
         console.log(responseApi)
       }

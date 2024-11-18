@@ -18,7 +18,6 @@ function authMiddleware(role = []) {
     if(!userLogger){
       return res.status(500).json("usuário não encontrado!")
     }
-    console.log(userLogger)
     if(role.length && !role.includes(userLogger.role)){
       return res.status(401).json({ mensagem: "Usuário sem permissão!" });
     }
