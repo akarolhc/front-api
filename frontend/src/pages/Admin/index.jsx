@@ -127,7 +127,6 @@ export default function Api() {
 
       {advices.length > 0 && (
         <div className="favorites-container">
-          <h3>Conselhos no Banco de Dados:</h3>
           <ul>
             {advices.map((fav) => (
               <li key={fav.id}>
