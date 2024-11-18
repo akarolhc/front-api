@@ -46,7 +46,7 @@ class UserApi {
 
     async findUsers(req, res) {
         try {
-            const users = await UserController.findUser()
+            const users = await UserController.findUsers()
             return res.status(200).send(users)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao listar usuário ${e.message}`})

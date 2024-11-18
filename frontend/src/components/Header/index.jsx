@@ -4,7 +4,7 @@ import { AuthContext } from "../../auth/Context";
 import "./styles.css"; 
 
 export default function Header() {
-    const { token, role } = useContext(AuthContext);
+    const { token, role, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleRedirectToUser = () => {
@@ -38,6 +38,9 @@ export default function Header() {
                                 <li>Admin</li>
                             </Link>
                     )}
+                    <Link to="/logout">
+                    <li>Sair</li>
+                    </Link>
                 </ul>
             </nav>
             <div className="logout-container">
