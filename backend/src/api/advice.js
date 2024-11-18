@@ -77,19 +77,6 @@ class AdviceApi {
         .send({ error: `Erro ao listar conselho: ${e.message}` });
     }
   }
-
-  async login(req, res) {
-    const { email, senha } = req.body;
-
-    try {
-      const token = await AdviceController.login(email, senha);
-      return res.status(200).send({ token });
-    } catch (e) {
-      return res
-        .status(400)
-        .send({ error: `Erro ao fazer login: ${e.message}` });
-    }
-  }
 }
 
 module.exports = new AdviceApi();

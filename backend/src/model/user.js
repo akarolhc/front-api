@@ -19,6 +19,10 @@ class UserModel {
         type: database.db.Sequelize.STRING,
         allowNull: false
       },
+      situacao:{
+        type: database.db.Sequelize.ENUM('ativo', 'inativo'),
+        defaultValue: 'ativo'
+      } ,
       role: {
         type: database.db.Sequelize.ENUM('admin', 'viewer'),
         allowNull: false
