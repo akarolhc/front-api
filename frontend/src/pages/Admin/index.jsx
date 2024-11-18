@@ -3,22 +3,20 @@ import "./styles.css";
 import {
   createAdvice,
   findOne,
-  deleteUserAdvice,
+  deleteAdvice, // Função para deletar permanentemente
   createUserAdvice,
   userAdvices,
   updateAdvice,
   findAllAdvices,
-  deleteAdvice,
 } from "../../api/advice";
 import { translateText } from "../../api/translate";
-import { useNavigate } from "react-router-dom";
 
 export default function Api() {
-  const [advice, setAdvice] = useState(null);
-  const [advices, setAdvices] = useState([]);
-  const [updateAdviceValue, setUpdateAdviceValue] = useState(null);
-  const navigate = useNavigate();
+  const [advice, setAdvice] = useState(null); // Armazena o conselho atual
+  const [advices, setAdvices] = useState([]); // Lista de conselhos favoritos
+  const [updateAdviceValue, setUpdateAdviceValue] = useState(null); // Armazena o conselho em edição
 
+  // Função para traduzir um conselho
   const traduzirConselho = async (text) => {
     try {
       const translation = await translateText(text, "pt");
@@ -29,6 +27,7 @@ export default function Api() {
     }
   };
 
+  // Adiciona um conselho aos favoritos
   const handleLikeButtonClick = async () => {
     if (advice) {
       try {
@@ -49,6 +48,7 @@ export default function Api() {
     }
   };
 
+  // Busca todos os conselhos do banco
   const getFavorites = async () => {
     try {
       const response = await findAllAdvices();
@@ -60,35 +60,46 @@ export default function Api() {
         }));
 
         setAdvices(favoriteList);
-        console.log("Conselhos favoritos carregados:", favoriteList);
+        console.log("Conselhos carregados:", favoriteList);
       } else {
-        console.log("Nenhum conselho favorito encontrado.");
+        console.log("Nenhum conselho encontrado.");
       }
     } catch (e) {
-      console.log("Erro ao buscar conselhos favoritos", e);
+      console.log("Erro ao buscar conselhos", e);
     }
   };
 
-  const handleDeleteUserAdvice = async (index) => {
+  // Apaga um conselho do banco de dados
+  const handleDeleteAdvice = async (id) => {
     try {
-      await deleteAdvice(index);
-      getFavorites();
+      console.log("Apagando conselho com ID:", id);
+      await deleteAdvice(id); // Faz a requisição DELETE para o banco de dados
+      getFavorites(); // Atualiza a lista após excluir
     } catch (e) {
-      console.log("Erro ao deletar conselho favorito", e);
+      console.log("Erro ao apagar conselho", e);
     }
   };
 
+  // Atualiza um conselho
   const handleUpdateAdvice = async () => {
     try {
-      const response = await updateAdvice(updateAdviceValue.id, { advice: updateAdviceValue.advice });
-      console.log("Conselho atualizado com sucesso:", response);
-      setUpdateAdviceValue(null);
-      getFavorites();
+      if (!updateAdviceValue) {
+        console.error("Nenhum conselho em edição.");
+        return;
+      }
+
+      await updateAdvice(updateAdviceValue.id, {
+        advice: updateAdviceValue.advice,
+      });
+
+      setUpdateAdviceValue(null); // Sai do modo de edição
+      getFavorites(); // Atualiza a lista
     } catch (e) {
-      console.log("Erro ao atualizar conselho favorito", e);
+      console.log("Erro ao atualizar conselho", e);
     }
   };
 
+  // Carrega os conselhos ao inicializar o componente
   useEffect(() => {
     getFavorites();
   }, []);
@@ -98,35 +109,14 @@ export default function Api() {
       <h1>Conselho para você:</h1>
 
       {advice ? (
-        updateAdviceValue ? (
-          <div className="a">
-            <input
-              type="text"
-              value={updateAdviceValue.advice}
-              onChange={(e) => setUpdateAdviceValue({...updateAdviceValue, advice: e.target.value})}
-            />
-            <button
-              onClick={() => handleUpdateAdvice()}
-            >
-              Alterar Conselho
-            </button>
-          </div>
-        ) : (
-          <div key={advice.id}>
-            <h2>{advice.translatedAdvice}</h2>
-          </div>
-        )
+        <div key={advice.id}>
+          <h2>{advice.translatedAdvice}</h2>
+        </div>
       ) : (
         <p>Carregando conselho...</p>
       )}
 
       <div className="button-container">
-        {/* <input
-          type="button"
-          onClick={getNewAdvice}
-          value="Gerar Um Novo Conselho"
-          className="new-advice-button"
-        /> */}
         <input
           type="button"
           onClick={handleLikeButtonClick}
@@ -137,17 +127,38 @@ export default function Api() {
 
       {advices.length > 0 && (
         <div className="favorites-container">
-          <h3>Conselhos Favoritos:</h3>
+          <h3>Conselhos no Banco de Dados:</h3>
           <ul>
             {advices.map((fav) => (
               <li key={fav.id}>
-                {fav.advice}
-                <button onClick={() => setUpdateAdviceValue(fav)}>
-                  Alterar Conselho
-                </button>
-                <button onClick={() => handleDeleteUserAdvice(fav.id)}>
-                  Desfavoritar
-                </button>
+                {updateAdviceValue && updateAdviceValue.id === fav.id ? (
+                  <div>
+                    <input
+                      type="text"
+                      value={updateAdviceValue.advice}
+                      onChange={(e) =>
+                        setUpdateAdviceValue({
+                          ...updateAdviceValue,
+                          advice: e.target.value,
+                        })
+                      }
+                    />
+                    <button onClick={handleUpdateAdvice}>Salvar</button>
+                    <button onClick={() => setUpdateAdviceValue(null)}>
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {fav.advice}
+                    <button onClick={() => setUpdateAdviceValue(fav)}>
+                      Alterar Conselho
+                    </button>
+                    <button onClick={() => handleDeleteAdvice(fav.id)}>
+                      Apagar Conselho
+                    </button>
+                  </>
+                )}
               </li>
             ))}
           </ul>
