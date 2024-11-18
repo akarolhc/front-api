@@ -8,7 +8,6 @@ export const createUser = async (user) => {
 
 export const userInfo = async () => {
     const response = await api.get('api/v1/user/info')
-    console.log('retorno da api', response)
     return response.data
 }
 
@@ -32,8 +31,8 @@ export const getUserByIdUser = async(id) => {
     return response.data
 }
 export const getUsers = async() => {
-    const response = await api.get(`/api/v1/user`)
-    return response.data
+    const response = await api.get(`/api/v1/user/find`)
+    return response
 }
 export const loginUser = async(email, password) => {
     const response = await api.post(`/api/v1/login`, {email, password})

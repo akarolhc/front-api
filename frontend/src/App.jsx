@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import ConselhosDiarioApi from "./pages/ConselhoDiarioApi";
-import User from "./pages/User"; 
+import User from "./pages/User";
 import PrivateRoute from "./routes/PrivateRoute";
 import Api from "./pages/Api/index";
 import Register from "./pages/Register";
@@ -15,29 +15,31 @@ import Admin from "./pages/Admin";
 import Favoritos from "./pages/Favoritos";
 
 function App() {
-  const location = useLocation();  
+  const location = useLocation();
 
   return (
     <AuthProvider>
-      {location.pathname !== '/login' && location.pathname !== '/register' && <Header />}
+      {location.pathname !== "/login" && location.pathname !== "/register" && (
+        <Header />
+      )}
 
-      <div className='content'>
+      <div className="content">
         <Routes>
-          <Route path='/login' element={<Login />} />
-          <Route path='/' element={<Home />} /> 
-          <Route path='/register' element={<Register />} />
-          <Route path='/user' element={<User />} /> 
-          <Route element={<PrivateRoute />}>
-            <Route path='/admin' element={<Admin />} />
-            <Route path='/apis' element={<Api />} />
-            <Route path='/conselho-diario' element={<ConselhosDiarioApi />} />
-            <Route path='/favorites' element={<Favoritos />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+            <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/apis" element={<Api />} />
+            <Route path="/conselho-diario" element={<ConselhosDiarioApi />} />
+            <Route path="/favorites" element={<Favoritos />} />
+            <Route path="/user" element={<User />} />
           </Route>
 
-          <Route path='/about' element={<About />} /> 
+          <Route path="/about" element={<About />} />
         </Routes>
       </div>
-      
+
       <Footer />
       {/* <ToastContainer />  */}
     </AuthProvider>

@@ -8,7 +8,7 @@ router.post("/", UserApi.createUser);
 router.put("/", authMiddleware(), UserApi.updateUser); 
 router.delete("/:id", authMiddleware(), UserApi.deleteUser);
 
-router.get("/", authMiddleware(["admin"]), UserApi.findUsers); 
+router.get("/find", authMiddleware(["admin"]), UserApi.findUsers); 
 router.post("/admin", authMiddleware(["admin"]), UserApi.createUserAdmin);
 router.put("/admin/:id", authMiddleware(["admin"]), UserApi.updateUser);
 router.delete("/admin/:id", authMiddleware(["admin"]), UserApi.deleteUser);

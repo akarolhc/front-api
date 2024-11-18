@@ -51,6 +51,11 @@ class UserController {
     return userValue;
   }
 
+  async findUsers() {
+      return await user.findAll(); // Obtém todos os usuários do banco de dados
+  }
+
+
   async update(id, name, email, password) {
     const oldUser = await user.findByPk(id);
     if(email){

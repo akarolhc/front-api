@@ -38,8 +38,8 @@ const createAdminUser = async () => {
       // Criar usuário administrador padrão
       await UserModel.create({
         name: "Admin",
-        email: "admin@example.com",
-        password: "admin123", // Lembre-se de usar bcrypt para hashear a senha
+        email: "admin@admin.com",
+        password: "admin", // Lembre-se de usar bcrypt para hashear a senha
         role: "admin",
       });
       console.log("Usuário administrador criado com sucesso");
