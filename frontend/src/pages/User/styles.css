@@ -1,18 +1,68 @@
-/* Garante que toda a página de usuário tenha um fundo branco */
-.user-page {
-  min-height: 100vh; /* Faz com que a página ocupe toda a altura da tela */
+
+
+.menu {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  margin-top: 10px;
 }
 
-.user-container {
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.menu li {
+  margin: 0 15px;
+}
+
+.menu a {
+  color: black;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  text-decoration: underline;
+  color: black;
+}
+
+.logout-container {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.logout-icon {
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+}
+
+.logout-icon:hover {
+  opacity: 0.8;
+}
+
+
+.user-page {
+  margin-top: 275px; 
+  max-width: 800px; 
+  margin-left: auto;
+  margin-right: auto;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  text-align: center;
+  background-color: #ffffff;
+  border-radius: 8px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  font-family: 'Inter', Arial, sans-serif; 
+  color: #333; 
+}
+
+.user-page h2 {
+  font-size: 1.8rem; 
+  color: #ea81ad;; 
+  text-align: center; 
+  margin-bottom: 20px;
 }
 
 .input-group {
@@ -21,35 +71,73 @@
 
 .input-group label {
   display: block;
+  font-size: 1rem; 
+  font-weight: bold;
   margin-bottom: 5px;
+  color: #555;
 }
 
 .input-group input {
   width: 100%;
   padding: 10px;
-  border: 1px solid #edbada;
-  border-radius: 4px;
+  border: 1px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box;
+  font-size: 1rem;
 }
 
-.update-button {
-  background-color: #ea81ad;
-  color: white;
+.input-group input:focus {
+  border-color: #ea81ad;; 
+  outline: none; 
+}
+
+button {
   padding: 10px 20px;
+  margin: 10px 5px 0 0; 
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  background-color:#ea81ad;;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
-  margin-right: 10px;
+  transition: background-color 0.3s ease;
 }
 
-.delete-button {
-  background-color: #ff6666;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+button:hover {
+  background-color: #ea81ad;; 
 }
 
-body {
-  background-color: #fef9f9; /* Cor de fundo do site */
+button:disabled {
+  background-color: #ccc; 
+  cursor: not-allowed;
+}
+
+.user-card {
+  border: 1px solid #ddd; 
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.user-card p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.user-card button {
+  display: inline-block; 
+  margin-right: 10px; 
+}
+
+.user-card button:last-child {
+  margin-right: 0; 
+}
+
+.user-page .loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
 }

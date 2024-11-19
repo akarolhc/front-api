@@ -1,21 +1,22 @@
+import { translateText } from '../../api/translate';
 import './styles.css';
 import { useState, useEffect } from "react";
 
 // funcao de traduzir o bgl
-async function translateText(text, targetLang = 'pt') {
-    try {
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
-        const data = await response.json();
+// async function translateText(text, targetLang = 'pt') {
+//     try {
+//         const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
+//         const data = await response.json();
 
-        if(data.responseStatus === 429) {
-            throw new Error("429 too many request")
-        }
-        return data.responseData.translatedText;
-    } catch (error) {
-        console.error('Erro ao traduzir:', error);
-        return text;
-    }
-}
+//         if(data.responseStatus === 429) {
+//             throw new Error("429 too many request")
+//         }
+//         return data.responseData.translatedText;
+//     } catch (error) {
+//         console.error('Erro ao traduzir:', error);
+//         return text;
+//     }
+// }
 
 const ConselhoDiarioApi = () => {
   const [dataAtual, setDataAtual] = useState("");
@@ -38,9 +39,11 @@ const ConselhoDiarioApi = () => {
         const response = await fetch('https://api.adviceslip.com/advice')
         const responseJson = await response.json()
         setAdvice(responseJson.slip.advice)
-    
+
+        const responseTranslateText = await translateText(responseJson?.slip?.advice)
         //traduz o conselho para português
-        setTranslatedAdvice(await translateText(responseJson.slip.advice, 'pt'));    
+        setTranslatedAdvice(await responseTranslateText.responseData.translatedText);    
+
     }
 
     exemplo()

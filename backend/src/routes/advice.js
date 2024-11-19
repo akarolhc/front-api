@@ -3,10 +3,11 @@ const AdviceApi = require("../api/advice");
 const authMiddleware = require("../middleware/auth");
 const router = express.Router();
 
-router.get("/", authMiddleware(), AdviceApi.findAdvices);
-router.get("/:id", authMiddleware(), AdviceApi.findOneAdvice);
-router.post("/", authMiddleware(["admin"]), AdviceApi.createAdvice);
-router.put("/:id", authMiddleware(["admin"]), AdviceApi.updateAdvice);
+router.get("/all", authMiddleware(['admin']), AdviceApi.findAdvices);
+router.get("/:id", authMiddleware(), AdviceApi.findById);
+router.get("/",authMiddleware(), AdviceApi.findOne)
+router.post("/", authMiddleware(), AdviceApi.createAdvice);
+router.put("/:id", authMiddleware(), AdviceApi.updateAdvice);
 router.delete("/:id", authMiddleware(["admin"]), AdviceApi.deleteAdvice); 
 
 

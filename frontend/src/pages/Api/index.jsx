@@ -1,100 +1,145 @@
-import { useEffect, useState } from 'react';
-import './styles.css';
-import { deleteAdvice, getAdvices } from '../../api/advice';
+import { useEffect, useState } from "react";
+import "./styles.css";
+import {
+  createAdvice,
+  findOne,
+  deleteUserAdvice,
+  createUserAdvice,
+  userAdvices
+} from "../../api/advice";
+import { translateText } from "../../api/translate";
+import { useNavigate } from "react-router-dom";
 
-async function translateText(text, targetLang = 'pt') {
+export default function Api() {
+  const [advice, setAdvice] = useState(null);
+  const [advices, setAdvices] = useState([]);
+  const navigate = useNavigate();
+
+  const getNewAdvice = async () => {
     try {
-        const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}`);
-        const data = await response.json();
+      const response = await findOne();
+      console.log("Resposta da API inicial:", response);
+      const conselho = response.data;
 
-        if (data.responseStatus === 429) {
-            throw new Error("429 too many requests");
-        }
-        return data.responseData.translatedText;
-    } catch (error) {
-        console.error('Erro ao traduzir:', error);
-        return text;
+      if (conselho) {
+        const translated = await traduzirConselho(conselho);
+        setAdvice({ ...conselho, translatedAdvice: translated });
+      } else {
+        console.log("Conselho não encontrado na resposta:", conselho);
+      }
+    } catch (e) {
+      console.log("Erro ao buscar conselho", e);
     }
-}
+  };
 
-// Busca o conselho
-const fetchAdvice = async () => {
+  const traduzirConselho = async (text) => {
     try {
-        const response = await fetch('https://api.adviceslip.com/advice');
-        const data = await response.json();
-        return data.slip.advice;
-    } catch (error) {
-        console.error('Erro ao buscar conselho', error);
-        return null;
+      const translation = await translateText(text, "pt");
+      return translation.responseData.translatedText;
+    } catch (e) {
+      console.log("Erro ao traduzir o conselho", e);
+      return text;
     }
-};
+  };
 
-const Api = () => {
-    const [advice, setAdvice] = useState(''); 
-    const [translatedAdvice, setTranslatedAdvice] = useState(''); 
+  const handleLikeButtonClick = async () => {
+    if (advice) {
+      try {
+        const response = await createAdvice({
+          advice: advice.translatedAdvice,
+        });
 
-    // Função que busca um novo conselho
-    const getNewAdvice = async () => {
-        const newAdvice = await getAdvices();
-        setAdvice(newAdvice);
+        if (response.status === 201 && response.data) {
+          const responseUserAdvice = await createUserAdvice(response.data);
 
-        // Traduz o conselho
-        if (newAdvice) {
-            const translated = await translateText(newAdvice, 'pt');
-            setTranslatedAdvice(translated);
-        } else {
-            setTranslatedAdvice('Não foi possível carregar o conselho.');
+          if (responseUserAdvice.status === 201) {
+            getFavorites();
+          }
         }
-    };
+      } catch (e) {
+        console.log("Erro ao adicionar o conselho aos favoritos", e);
+      }
+    }
+  };
 
-    const alterarConselho = async () => {
-        const newAdvice = await getAdvices();
-        setAdvice(newAdvice);
+  const getFavorites = async () => {
+    try {
+      const response = await userAdvices();
 
-        // Traduz o conselho
-        if (newAdvice) {
-            const translated = await translateText(newAdvice, 'pt');
-            setTranslatedAdvice(translated);
-        } else {
-            setTranslatedAdvice('Não foi possível carregar o conselho.');
-        }
-    };
+      if (response && Array.isArray(response)) {
+        const favoriteList = response.map((item) => ({
+          id: item.id,
+          advice: item.advice.advice,
+        }));
 
-    const deletarConselho = async () => {
-        deleteAdvice(advice.id)
-    };
+        setAdvices(favoriteList);
+        console.log("Conselhos favoritos carregados:", favoriteList);
+      } else {
+        console.log("Nenhum conselho favorito encontrado.");
+      }
+    } catch (e) {
+      console.log("Erro ao buscar conselhos favoritos", e);
+    }
+  };
 
-    useEffect(() => {
-        getNewAdvice(); 
-    }, []);
+  const handleDeleteUserAdvice = async (index) => {
+    try {
+      await deleteUserAdvice(index);
+      getFavorites();
+    } catch (e) {
+      console.log("Erro ao deletar conselho favorito", e);
+    }
+  };
 
-    return (
-        <div className="api-container">
-            <h1>Conselho para você:</h1>
-            <p className="advice-text">{translatedAdvice ? translatedAdvice : 'Carregando conselho...'}</p>
-            
-            <div className="button-container">
-                <input 
-                    type="button" 
-                    onClick={getNewAdvice} 
-                    value="Gerar Um Novo Conselho" 
-                    className="new-advice-button" 
-                />
-                <input 
-                    type="button" 
-                    onClick={alterarConselho} 
-                    value="Modificar Conselho" 
-                    className="new-advice-button" 
-                />
-                <input 
-                    type="button" 
-                    onClick={deletarConselho} 
-                    value="Deletar Conselho" 
-                    className="new-advice-button" 
-                />
-            </div>
+  useEffect(() => {
+    getNewAdvice();
+    getFavorites();
+  }, []);
+
+  return (
+    <div className="api-container">
+      <h1>Conselho para você:</h1>
+
+      {advice ? (
+        (
+          <div key={advice.id}>
+            <h2>{advice.translatedAdvice}</h2>
+          </div>
+        )
+      ) : (
+        <p>Carregando conselho...</p>
+      )}
+
+      <div className="button-container">
+        <input
+          type="button"
+          onClick={getNewAdvice}
+          value="Gerar Um Novo Conselho"
+          className="new-advice-button"
+        />
+        <input
+          type="button"
+          onClick={handleLikeButtonClick}
+          value="Curtir Conselho"
+          className="new-advice-button"
+        />
+      </div>
+
+      {advices.length > 0 && (
+        <div className="favorites-container">
+          <h3>Conselhos Favoritos:</h3>
+          <ul>
+            {advices.map((fav) => (
+              <li key={fav.id}>
+                {fav.advice}
+                <button onClick={() => handleDeleteUserAdvice(fav.id)}>
+                  Desfavoritar
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
-    );
-};
-
-export default Api;
+      )}
+    </div>
+  );
+}

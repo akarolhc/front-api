@@ -1,126 +1,90 @@
 const adviceModel = require("../model/advice");
+const userAdviceModel = require("../model/user_advice");
 
 class AdviceController {
-    async createAdvice(titule, userId) {
-        if (!titule || !userId) {
-            throw new Error("Conselho não fornecido");
-        }
-
-        const AdviceValue = await adviceModel.create({
-            titule,
-            userId
-        });
-
-        return AdviceValue;
+  async createAdvice(advice) {
+    if (!advice) {
+      throw new Error("Conselho não fornecido");
     }
 
-    async findOne(id) {
-        if (id === undefined) {
-            throw new Error("Id não fornecido");
-        }
+    const AdviceValue = await adviceModel.create({
+      advice,
+    });
 
-        const AdviceValue = await adviceModel.findByPk(id);
+    return AdviceValue;
+  }
 
-        if (!AdviceValue) {
-            throw new Error("Conselho não encontrado");
-        }
-
-        return AdviceValue;
+  async findById(id) {
+    if (id === undefined) {
+      throw new Error("Id não fornecido");
     }
 
-    async findAll(page = 1, limit = 100) {
+    const AdviceValue = await adviceModel.findByPk(id);
 
-        const offset = (page - 1) * limit;
-        const AdviceValue = await adviceModel.findAll({
-            limit: limit,
-            offset: offset
-        });
-
-        if (page === 1 && AdviceValue.length <= 0) {
-            const requestOptions = {
-                method: 'GET',
-                redirect: 'follow'
-            };
-
-            for (let i = 0; i < 100; i++) {
-            
-                try {
-                    const response = await fetch(
-                        `https://api.adviceslip.com/advice`,
-                        requestOptions
-                    );
-
-                    if (!response.ok) {
-                        throw new Error('Erro ao buscar conselhos');
-                    }
-
-                    const data = await response.json();
-
-                    adviceModel.create({
-                         advice: data.slip.advice,
-                    });
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-    
-        }
-
-        const count = AdviceValue.length;
-        const pages = Math.ceil(count / limit);
-
-        const result = page <= pages
-            ? {
-                info: {
-                    count: count,
-                    pages: pages,
-                    next: pages == page ? null : `https://api.adviceslip.com/advice`,
-                    prev: page == 1 ? null : `https://api.adviceslip.com/advice`
-                },
-                results: AdviceValue
-            }
-            : {
-                info: {
-                    count: count,
-                    pages: pages,
-                    next: `https://api.adviceslip.com/advice`,
-                    prev: `https://api.adviceslip.com/advice`
-                },
-                results: []
-            };
-
-        return result;
+    if (!AdviceValue) {
+      throw new Error("Conselho não encontrado");
     }
 
-    async updateAdvice(id, titule, userId) {
-        const oldAdvice = await adviceModel.findByPk(id);
+    return AdviceValue;
+  }
 
-        if (!oldAdvice) {
-            throw new Error("Conselho não encontrado");
-        }
+  async findOne() {
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
 
-        oldAdvice.titule = titule || oldAdvice.titule;
-        oldAdvice.userId = userId || oldAdvice.userId;
-        await oldAdvice.save();
+    // Faz uma requisição para obter um conselho aleatório
+    const response = await fetch(
+      `https://api.adviceslip.com/advice`,
+      requestOptions
+    );
 
-        return oldAdvice;
+    if (!response.ok) {
+      throw new Error("Erro ao buscar conselho");
     }
 
-    async deleteAdvice(id) {
-        if (id === undefined) {
-            throw new Error("Id não fornecido");
-        }
+    const data = await response.json();
+    // Retorna o conselho obtido da API
+    return data.slip.advice;
+  }
 
-        const AdviceValue = await adviceModel.findByPk(id);
+  async findAllAdvices() {
+    return await adviceModel.findAll();
+  }
 
-        if (!AdviceValue) {
-            throw new Error("Conselho não encontrado");
-        }
+  async updateAdvice(id, advice) {
+    console.log(id);
+    const oldAdvice = await adviceModel.findByPk(id);
 
-        await AdviceValue.destroy();
+    console.log(oldAdvice);
 
-        return;
+    if (!oldAdvice) {
+      throw new Error("Conselho não encontrado");
     }
+
+    oldAdvice.advice = advice || oldAdvice.advice;
+    await oldAdvice.save();
+
+    return oldAdvice;
+  }
+
+  async deleteAdvice(id) {
+    if (id === undefined) {
+      throw new Error("Id não fornecido");
+    }
+
+    const AdviceValue = await adviceModel.findByPk(id);
+
+    if (!AdviceValue) {
+      throw new Error("Conselho não encontrado");
+    }
+
+    await AdviceValue.destroy();
+
+
+    return;
+  }
 }
 
 module.exports = new AdviceController();
