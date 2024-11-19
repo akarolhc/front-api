@@ -3,17 +3,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #e5c2c2;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-}
-
 .register-container {
     background-color: #ebd6df;  
     padding: 20px;
