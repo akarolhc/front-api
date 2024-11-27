@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const database = require("../backend/src/config/database");
+const database = require("./src/config/database");
 
 const UserApi = require("./src/api/user");
 const UserRouter = require("./src/routes/user");
@@ -57,8 +57,8 @@ database.db
     await createAdminUser(); // Chamar a função de criação do admin
 
     if (!process.env.TEST) {
-      app.listen(8080, (_) => {
-        console.log("Server running on port 8080");
+      app.listen(3000, (_) => {
+        console.log("Server running on port 3000");
       });
     }
   })
