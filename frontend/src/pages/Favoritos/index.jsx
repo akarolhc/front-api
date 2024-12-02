@@ -1,34 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import './styles.css'; 
-import { userAdvices } from '../../api/advice';
-
+import React, { useState, useEffect } from "react";
+import "./styles.css";
+import { userAdvices, deleteUserAdvice } from "../../api/advice";
 
 const FavoritesPage = () => {
   const [advices, setAdvices] = useState([]);
 
-
   const getFavorites = async () => {
     try {
       const result = await userAdvices();
-      console.log("Resposta da API (result):", result); 
 
       if (result && Array.isArray(result)) {
-        const favoriteList =result.map((item) => ({
+        const favoriteList = result.map((item) => ({
           id: item.id,
-          advice: item.advice?.advice || item.advice || "Conselho indisponível", 
+          advice: item.advice?.advice || item.advice || "Conselho indisponível",
         }));
-        
+
         setAdvices(favoriteList);
-        console.log("Lista de conselhos favoritos carregada:", favoriteList); 
+        console.log("Lista de conselhos favoritos carregada:", favoriteList);
       } else {
-        console.warn("Nenhum conselho favorito encontrado ou a resposta não é um array.");
+        console.warn(
+          "Nenhum conselho favorito encontrado ou a resposta não é um array."
+        );
       }
     } catch (error) {
-      console.error("Erro ao buscar conselhos favoritos:", error); 
+      console.error("Erro ao buscar conselhos favoritos:", error);
     }
   };
 
-  // Chama a função getFavorites quando o componente carrega
+  const handleDeleteUserAdvice = async (index) => {
+    try {
+      await deleteUserAdvice(index);
+      getFavorites();
+    } catch (e) {
+      console.log("Erro ao deletar conselho favorito", e);
+    }
+  };
+
   useEffect(() => {
     getFavorites();
   }, []);
@@ -38,9 +45,12 @@ const FavoritesPage = () => {
       <h1>Conselhos Favoritos</h1>
       {advices.length > 0 ? (
         <ul>
-          {advices.map((advice) => (
-            <li key={advice.id}>
-              {advice.advice}
+          {advices.map((index) => (
+            <li key={index.id}>
+              {index.advice}
+              <button onClick={() => handleDeleteUserAdvice(index.id)}>
+                💔
+              </button>
             </li>
           ))}
         </ul>

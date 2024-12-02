@@ -63,12 +63,14 @@ class UserController {
         throw new Error("Email já cadastrado.");
       }
     }
+
     oldUser.name = name || oldUser.name;
     oldUser.email = email || oldUser.email;
     oldUser.situacao = situacao || oldUser.situacao;
     oldUser.password = password
       ? await bcrypt.hash(String(password), SALT_VALUE)
       : oldUser.password;
+    
     oldUser.save();
 
     return oldUser;
@@ -99,7 +101,8 @@ class UserController {
       throw new Error("Usuário inativo.");
     }
   
-    const senhaValida = await bcrypt.compare(String(password), userValue.password);
+    const senhaValida = await bcrypt.compare(password, userValue.password);
+    
     if (!senhaValida) {
       throw new Error("[2] Usuário e senha inválidos.");
     }

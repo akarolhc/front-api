@@ -17,7 +17,6 @@ const Register = () => {
       const responseApi = await createUser({name, email, password})
       console.log(responseApi)
       if(responseApi.id){
-        //window.location = '/login'
         navigate('/login')
       } else {
         console.log(responseApi)
@@ -66,6 +65,7 @@ const Register = () => {
           />
         </div>
         <button type="submit" className="register-button">Registrar</button>
+        <button onClick={() => navigate('/login')} style={{width:'100%'}}>Voltar</button>
       </form>
     </div>
   );
