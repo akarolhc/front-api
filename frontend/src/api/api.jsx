@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: "http://localhost:3100",
+    baseURL: "https://backend-fullstack-qdxu.onrender.com",
     timeout: 10000
 })
 
