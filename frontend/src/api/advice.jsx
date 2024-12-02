@@ -1,8 +1,11 @@
 import api from "./api";
 
 export const createAdvice = async (advice) => {
-  const response = await api.post("api/v1/advice/", advice);
-  return response;
+  const body = {
+    advice: advice,
+  };
+  const response = await api.post("api/v1/advice/", body);
+  return response.data;
 };
 
 export const findOne = async () => {
@@ -44,3 +47,8 @@ export const deleteUserAdvice = async (id) => {
   const response = await api.delete(`api/v1/userAdvice/${id}`);
   return response.data;
 };
+
+export const alimentarConselhos = async () => {
+  const response = await api.get(`api/v1/advice/alimentar`);
+  return response;
+}

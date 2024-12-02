@@ -1,10 +1,6 @@
 header {
   background-color: #ea81ad;
   color: black;
-  padding: 10px 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -59,8 +55,4 @@ header h1 {
 
 .logout-icon:hover {
   opacity: 0.8;
-}
-
-.content {
-  padding-top: 100px; /* Aumenta o padding-top para que o conteúdo não sobreponha o header */
 }

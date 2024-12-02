@@ -3,7 +3,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     text-align: center;
 }
 
@@ -23,17 +22,25 @@
 .favorites-page li {
     font-size: 1.2em;
     color: #333;
-    padding: 15px;
+    padding: 5px;
     margin-bottom: 10px;
     background-color: #ebd6df;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     word-wrap: break-word;
     text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
 }
 
 .favorites-page p {
     font-size: 1.2em;
     color: #555;
     margin-top: 20px;
+}
+
+.favorites-page button {
+    margin: 0;
 }

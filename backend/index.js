@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const database = require("../backend/src/config/database");
+const database = require("./src/config/database");
 
 const UserApi = require("./src/api/user");
 const UserRouter = require("./src/routes/user");
@@ -8,8 +8,10 @@ const AdviceRouter = require("./src/routes/advice");
 const UserAdviceRouter = require("./src/routes/user_advice");
 const authMiddleware = require("./src/middleware/auth");
 const UserModel = require("./src/model/user");
+const bcrypt = require("bcrypt")
 require("./src/model/association");
 
+const SALT_VALUE = 10;
 
 const app = express();
 app.use(express.json());
@@ -20,7 +22,6 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "OK" });
 });
 
-// Rotas sem token
 app.post("/api/v1/login", UserApi.login);
 app.post("/api/v1/user", UserApi.createUser);
 app.post("/api/v1/user/admin", authMiddleware(['admin']), UserApi.createUserAdmin);
@@ -28,18 +29,18 @@ app.post("/api/v1/user/admin", authMiddleware(['admin']), UserApi.createUserAdmi
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/advice", AdviceRouter);
 app.use("/api/v1/userAdvice", UserAdviceRouter);
-// Função assíncrona para criar usuário administrador
+
 const createAdminUser = async () => {
   try {
-    // Verificar se existe um usuário administrador
     const adminUser = await UserModel.findOne({ where: { role: 'admin' } });
 
+    const hashedPassword = await bcrypt.hash('admin', SALT_VALUE);
+
     if (!adminUser) {
-      // Criar usuário administrador padrão
       await UserModel.create({
         name: "Admin",
         email: "admin@admin.com",
-        password: "admin", // Lembre-se de usar bcrypt para hashear a senha
+        password: hashedPassword,
         role: "admin",
       });
       console.log("Usuário administrador criado com sucesso");
@@ -54,11 +55,11 @@ const createAdminUser = async () => {
 database.db
   .sync({ force:  false })
   .then(async (_) => {
-    await createAdminUser(); // Chamar a função de criação do admin
+    await createAdminUser();
 
     if (!process.env.TEST) {
-      app.listen(8080, (_) => {
-        console.log("Server running on port 8080");
+      app.listen(3100, (_) => {
+        console.log("Server running on port 3100");
       });
     }
   })

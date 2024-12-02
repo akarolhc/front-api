@@ -34,9 +34,10 @@ export default function Header() {
             </Link>
           )}
           {role === "admin" && token && (
-              <Link to="/admin">
-              <li>Admin</li>
-            </Link>
+            <>
+              <Link to="/users"><li>Usuários</li></Link>
+              <Link to="/advices"><li>Conselhos</li></Link>
+            </>
           )}
           {token && (
             <li className="logout" onClick={logout}>
