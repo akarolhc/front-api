@@ -8,8 +8,10 @@ const AdviceRouter = require("./src/routes/advice");
 const UserAdviceRouter = require("./src/routes/user_advice");
 const authMiddleware = require("./src/middleware/auth");
 const UserModel = require("./src/model/user");
+const bcrypt = require("bcrypt")
 require("./src/model/association");
 
+const SALT_VALUE = 10;
 
 const app = express();
 app.use(express.json());
@@ -17,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "OK" });
+  res.status(200).json({ message: "OK" });x
 });
 
 // Rotas sem token
@@ -34,12 +36,14 @@ const createAdminUser = async () => {
     // Verificar se existe um usuário administrador
     const adminUser = await UserModel.findOne({ where: { role: 'admin' } });
 
+    const hashedPassword = await bcrypt.hash('admin', SALT_VALUE);
+
     if (!adminUser) {
       // Criar usuário administrador padrão
       await UserModel.create({
         name: "Admin",
         email: "admin@admin.com",
-        password: "admin", // Lembre-se de usar bcrypt para hashear a senha
+        password: hashedPassword, // Lembre-se de usar bcrypt para hashear a senha
         role: "admin",
       });
       console.log("Usuário administrador criado com sucesso");
@@ -57,8 +61,8 @@ database.db
     await createAdminUser(); // Chamar a função de criação do admin
 
     if (!process.env.TEST) {
-      app.listen(3000, (_) => {
-        console.log("Server running on port 3000");
+      app.listen(3100, (_) => {
+        console.log("Server running on port 3100");
       });
     }
   })

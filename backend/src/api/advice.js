@@ -14,6 +14,15 @@ class AdviceApi {
     }
   }
 
+  async alimentarConselhos(req, res) {
+    try {
+        const Advices = await AdviceController.alimentarConselhos();
+        return res.status(200).send(Advices);
+    } catch (e) {
+        return res.status(400).send({ error: ` Erro ao listar conselho: ${e.message}` });
+    }
+}
+
   async updateAdvice(req, res) {
     const {id} = req.params;
     const {advice} = req.body;

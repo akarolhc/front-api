@@ -1,4 +1,12 @@
 .login-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--var-bg);
+}
+
+.login-form{
   background-color: #ebd6df;  
   padding: 20px;
   border-radius: 10px; 

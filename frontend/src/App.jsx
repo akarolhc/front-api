@@ -13,35 +13,32 @@ import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./auth/Context";
 import Admin from "./pages/Admin";
 import Favoritos from "./pages/Favoritos";
+import AdviceManager from "./pages/AdviceManager";
+import Layout from "./components/Layout";
+import UserManager from "./pages/UserManager";
 
 function App() {
   const location = useLocation();
 
   return (
     <AuthProvider>
-      {location.pathname !== "/login" && location.pathname !== "/register" && (
-        <Header />
-      )}
-
       <div className="content">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-            <Route element={<PrivateRoute />}>
+          <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/apis" element={<Api />} />
             <Route path="/conselho-diario" element={<ConselhosDiarioApi />} />
             <Route path="/favorites" element={<Favoritos />} />
             <Route path="/user" element={<User />} />
+            <Route path="/advices" element={<AdviceManager />} />
+            <Route path="/users" element={<UserManager />} />
+            <Route path="/about" element={<About />} />
           </Route>
-
-          <Route path="/about" element={<About />} />
         </Routes>
       </div>
-
-      <Footer />
-      {/* <ToastContainer />  */}
     </AuthProvider>
   );
 }

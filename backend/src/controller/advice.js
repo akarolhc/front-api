@@ -29,28 +29,99 @@ class AdviceController {
   }
 
   async findOne() {
+    const advices = await adviceModel.findAll({ attributes: ["id"] });
+    
+    const ids = advices.map((advice) => advice.id);
+
+    console.log("IDs encontrados:", ids);
+
+    if (ids.length === 0) {
+      throw new Error("Nenhum conselho encontrado");
+    }
+
+    const randomIndex = Math.floor(Math.random() * ids.length);
+    const randomId = ids[randomIndex];
+
+    const response = await this.findById(randomId);
+
+    console.log("Resposta:", response);
+
+    if (!response || !response.dataValues) {
+      throw new Error("Erro ao buscar conselho");
+    }
+
+    return response;
+  }
+
+  async findAllAdvices() {
+    return await adviceModel.findAll({
+      order: [["advice", "ASC"]],
+    });
+  }
+
+  async alimentarConselhos() {
+    const page = 1;
+    const limit = 100;
+
+    const offset = (page - 1) * limit;
+
+    console.log("AAA");
+
+    const AdviceValue = await adviceModel.findAll({
+      limit: limit,
+      offset: offset,
+    });
+
     const requestOptions = {
       method: "GET",
       redirect: "follow",
     };
 
-    // Faz uma requisição para obter um conselho aleatório
-    const response = await fetch(
-      `https://api.adviceslip.com/advice`,
-      requestOptions
-    );
+    for (let i = 0; i < 100; i++) {
+      try {
+        const response = await fetch(
+          `https://api.adviceslip.com/advice`,
+          requestOptions
+        );
 
-    if (!response.ok) {
-      throw new Error("Erro ao buscar conselho");
+        if (!response.ok) {
+          throw new Error("Erro ao buscar conselhos");
+        }
+
+        const data = await response.json();
+        adviceModel.create({
+          advice: data.slip.advice,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
-    const data = await response.json();
-    // Retorna o conselho obtido da API
-    return data.slip.advice;
-  }
+    const count = AdviceValue.length;
+    const pages = Math.ceil(count / limit);
 
-  async findAllAdvices() {
-    return await adviceModel.findAll();
+    const result =
+      page <= pages
+        ? {
+            info: {
+              count: count,
+              pages: pages,
+              next: pages == page ? null : `https://api.adviceslip.com/advice`,
+              prev: page == 1 ? null : `https://api.adviceslip.com/advice`,
+            },
+            results: AdviceValue,
+          }
+        : {
+            info: {
+              count: count,
+              pages: pages,
+              next: `https://api.adviceslip.com/advice`,
+              prev: `https://api.adviceslip.com/advice`,
+            },
+            results: [],
+          };
+
+    return result;
   }
 
   async updateAdvice(id, advice) {
@@ -81,7 +152,6 @@ class AdviceController {
     }
 
     await AdviceValue.destroy();
-
 
     return;
   }
